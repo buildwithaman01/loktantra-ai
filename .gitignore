@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js
+.next/
+out/
+dist/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Testing
+playwright-report/
+test-results/
+coverage/
+
+# Misc
+*.log
+.DS_Store
+Thumbs.db
