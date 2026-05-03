@@ -9,7 +9,7 @@
 
 **Built for:** PromptWars Virtual | Challenge 2: Election Process Education  
 **Host:** Hack2Skill × Google for Developers  
-**Live Demo:** [YOUR_CLOUD_RUN_URL]  
+**Live Demo:** [https://loktantra-ai-121988453399.asia-south1.run.app/](https://loktantra-ai-121988453399.asia-south1.run.app/)  
 **App Type:** Installable Progressive Web App (PWA)
 
 ---
@@ -78,7 +78,7 @@ locates nearby polling booths, and communicates in the user's native language.
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/loktantra-ai
+git clone https://github.com/buildwithaman01/loktantra-ai.git
 cd loktantra-ai
 
 # Install dependencies

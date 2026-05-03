@@ -43,13 +43,13 @@ export default function CommandCenter({ profile }: { profile: UserProfile }): JS
       {/* Desktop Grid Layout */}
       <div className="hidden md:grid grid-cols-12 gap-6 h-[800px]">
         {/* Main Area: Chat */}
-        <section className="col-span-7 bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 flex flex-col">
+        <section className="col-span-7 bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 flex flex-col h-full">
           <ChatAssistant userProfile={profile} />
         </section>
 
         {/* Sidebar: Map & Tools */}
         <aside className="col-span-5 flex flex-col gap-6 overflow-y-auto pr-2">
-          <section className="bg-white rounded-3xl shadow-xl p-4 border border-gray-100 h-[400px]">
+          <section className="bg-white rounded-3xl shadow-xl p-5 border border-gray-100 min-h-[420px] flex flex-col">
             <PollingRadar state={profile.state} />
           </section>
           
@@ -102,7 +102,7 @@ export default function CommandCenter({ profile }: { profile: UserProfile }): JS
         )}
         {activeTab === "map" && (
           <div className="h-full p-4 animate-fade-in-up">
-            <div className="bg-white rounded-3xl shadow-xl p-4 border border-gray-100 h-[500px]">
+            <div className="bg-white rounded-3xl shadow-xl p-5 border border-gray-100 h-[calc(100vh-220px)] min-h-[450px] flex flex-col">
               <PollingRadar state={profile.state} />
             </div>
           </div>

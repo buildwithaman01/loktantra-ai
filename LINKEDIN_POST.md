@@ -12,6 +12,8 @@ This isn't just a chatbot. We built a production-hardened civic engine from the 
 
 Tech Stack: Next.js 14 · Google Cloud Run · Artifact Registry · Secret Manager · Zod · Tailwind CSS
 
+Live Demo: https://loktantra-ai-121988453399.asia-south1.run.app/
+
 Huge thanks to @googlefordevelopers and @hack2skill for the platform. Ready to see the impact of AI on civic empowerment! 🇮🇳
 
 #BuildwithAI #PromptWarsVirtual #GoogleGemini #ElectionTech #CivicAI #GenerativeAI

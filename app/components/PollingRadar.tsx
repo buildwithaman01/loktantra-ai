@@ -88,8 +88,8 @@ export default function PollingRadar(props: { state: string }): JSX.Element {
   };
 
   return (
-    <div className="flex flex-col gap-5 p-2 md:p-0">
-      <div className="flex gap-2 relative z-10">
+    <div className="flex flex-col h-full gap-4 overflow-hidden">
+      <div className="flex flex-col md:flex-row gap-2 relative z-10">
         <input 
           type="text" 
           value={pinCode}
@@ -102,7 +102,7 @@ export default function PollingRadar(props: { state: string }): JSX.Element {
           onClick={fetchBooths}
           disabled={isLoading || !pinCode}
           aria-label="Search for polling stations"
-          className="gradient-bg text-white px-6 py-3 rounded-xl font-bold text-sm shadow-md hover:shadow-lg disabled:opacity-50 transition-all active:scale-95"
+          className="gradient-bg text-white px-6 py-3 rounded-xl font-bold text-sm shadow-md hover:shadow-lg disabled:opacity-50 transition-all active:scale-95 whitespace-nowrap"
         >
           {isLoading ? "..." : "Search"}
         </button>
@@ -112,7 +112,7 @@ export default function PollingRadar(props: { state: string }): JSX.Element {
         ref={mapRef} 
         aria-label="Nearby polling stations map" 
         role="img" 
-        className="h-72 md:h-64 bg-slate-100 rounded-2xl w-full border-4 border-white shadow-xl overflow-hidden"
+        className="flex-1 min-h-[200px] bg-slate-100 rounded-2xl w-full border-2 border-white shadow-lg overflow-hidden"
       ></div>
 
       {booths.length > 0 && (
