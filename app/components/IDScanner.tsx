@@ -1,6 +1,15 @@
 "use client";
 import { useState, useRef } from "react";
 
+/**
+ * IDScanner Component
+ * 
+ * Handles secure identity document verification using Gemini 1.5 Flash Vision.
+ * Features:
+ * - Client-side image compression (Canvas API)
+ * - Automatic OCR and document type validation
+ * - Instant feedback and error handling
+ */
 export default function IDScanner({ onResult }: { onResult: (res: string) => void }): JSX.Element {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);

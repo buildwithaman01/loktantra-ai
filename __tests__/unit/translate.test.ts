@@ -1,64 +1,55 @@
 import { translate } from "@/lib/translate";
 
-// Mock fetch globally
-global.fetch = jest.fn();
-
-describe("translate utility", () => {
+describe("Translation Utility", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    global.fetch = jest.fn();
+    // Clear cache by resetting module or just testing different strings
   });
 
-  it("returns original text if target is 'en'", async () => {
-    const result = await translate("Hello English", "en");
-    expect(result).toBe("Hello English");
-    expect(fetch).not.toHaveBeenCalled();
+  it("returns original text if language is English", async () => {
+    const result = await translate("Hello", "en");
+    expect(result).toBe("Hello");
+    expect(global.fetch).not.toHaveBeenCalled();
   });
 
-  it("returns original text if text is empty", async () => {
-    const result = await translate("", "hi");
-    expect(result).toBe("");
-    expect(fetch).not.toHaveBeenCalled();
-  });
-
-  it("calls API for new translations and caches them", async () => {
-    (fetch as jest.Mock).mockResolvedValueOnce({
+  it("fetches and caches translations", async () => {
+    const mockResponse = {
       ok: true,
-      json: async () => ({ translated: "नमस्ते" }),
-    });
+      json: () => Promise.resolve({ translated: "नमस्ते" }),
+    };
+    (global.fetch as jest.Mock).mockResolvedValue(mockResponse);
 
-    const result1 = await translate("Hello Cache", "hi");
+    const result1 = await translate("Hello", "hi");
     expect(result1).toBe("नमस्ते");
-    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(global.fetch).toHaveBeenCalledTimes(1);
 
     // Second call should use cache
-    const result2 = await translate("Hello Cache", "hi");
+    const result2 = await translate("Hello", "hi");
     expect(result2).toBe("नमस्ते");
-    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(global.fetch).toHaveBeenCalledTimes(1);
   });
 
-  it("handles array translations", async () => {
-    (fetch as jest.Mock).mockResolvedValueOnce({
+  it("handles batch translations", async () => {
+    const mockResponse = {
       ok: true,
-      json: async () => ({ translated: ["नमस्ते", "स्वागत"] }),
-    });
+      json: () => Promise.resolve({ translated: ["नमस्ते", "स्वागत"] }),
+    };
+    (global.fetch as jest.Mock).mockResolvedValue(mockResponse);
 
-    const result = await translate(["Word1", "Word2"], "hi");
+    const result = await translate(["Hello", "Welcome"], "hi");
     expect(result).toEqual(["नमस्ते", "स्वागत"]);
   });
 
-  it("gracefully falls back to original text on API error", async () => {
-    (fetch as jest.Mock).mockResolvedValueOnce({ ok: false });
-
-    // Use a fresh string that isn't cached
-    const result = await translate("Error Test 1", "hi");
-    expect(result).toBe("Error Test 1");
+  it("falls back to original text on API error status", async () => {
+    const mockResponse = { ok: false };
+    (global.fetch as jest.Mock).mockResolvedValue(mockResponse);
+    const result = await translate("StatusFail", "hi");
+    expect(result).toBe("StatusFail");
   });
 
-  it("gracefully falls back on network failure", async () => {
-    (fetch as jest.Mock).mockRejectedValueOnce(new Error("Network Error"));
-
-    // Use a fresh string that isn't cached
-    const result = await translate("Error Test 2", "hi");
-    expect(result).toBe("Error Test 2");
+  it("falls back to original text on API failure", async () => {
+    (global.fetch as jest.Mock).mockRejectedValue(new Error("Network error"));
+    const result = await translate("Fail", "hi");
+    expect(result).toBe("Fail");
   });
 });

@@ -6,16 +6,16 @@ interface AppStore {
   language: Language;
   setLanguage: (lang: Language) => void;
   highContrast: boolean;
-  toggleHighContrast: () => void;
+  setHighContrast: (val: boolean) => void;
   dyslexiaFont: boolean;
-  toggleDyslexiaFont: () => void;
+  setDyslexiaFont: (val: boolean) => void;
 }
 
 export const useAppStore = create<AppStore>((set) => ({
   language: "en",
   setLanguage: (lang): void => set({ language: lang }),
   highContrast: false,
-  toggleHighContrast: (): void => set((s) => ({ highContrast: !s.highContrast })),
+  setHighContrast: (val): void => set({ highContrast: val }),
   dyslexiaFont: false,
-  toggleDyslexiaFont: (): void => set((s) => ({ dyslexiaFont: !s.dyslexiaFont })),
+  setDyslexiaFont: (val): void => set({ dyslexiaFont: val }),
 }));

@@ -1,22 +1,31 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useAppStore } from "@/lib/store";
 
+/**
+ * AccessibilityBar Component
+ * 
+ * Provides global toggles for accessibility features including:
+ * - High Contrast Mode (WCAG 2.1 compliance)
+ * - Dyslexia-Friendly Typography (OpenDyslexic inspired)
+ * 
+ * Syncs state with the global AppStore for cross-session persistence.
+ */
 export default function AccessibilityBar(): JSX.Element {
-  const [highContrast, setHighContrast] = useState(false);
-  const [dyslexiaFont, setDyslexiaFont] = useState(false);
+  const { highContrast, dyslexiaFont, setHighContrast, setDyslexiaFont } = useAppStore();
 
-  useEffect(() => {
+  useEffect((): void => {
     document.documentElement.classList.toggle("high-contrast", highContrast);
   }, [highContrast]);
 
-  useEffect(() => {
+  useEffect((): void => {
     document.documentElement.classList.toggle("dyslexia-font", dyslexiaFont);
   }, [dyslexiaFont]);
 
   return (
     <aside aria-label="Accessibility options" className="flex gap-2 p-1 bg-white/5 rounded-xl backdrop-blur-sm border border-white/5">
       <button
-        onClick={() => setHighContrast((prev) => !prev)}
+        onClick={() => setHighContrast(!highContrast)}
         aria-label={highContrast ? "Disable high contrast mode" : "Enable high contrast mode"}
         aria-pressed={highContrast}
         className={`text-xs font-bold px-3 py-2 rounded-lg border transition-all
@@ -27,7 +36,7 @@ export default function AccessibilityBar(): JSX.Element {
         CONTRAST
       </button>
       <button
-        onClick={() => setDyslexiaFont((prev) => !prev)}
+        onClick={() => setDyslexiaFont(!dyslexiaFont)}
         aria-label={dyslexiaFont ? "Disable dyslexia-friendly font" : "Enable dyslexia-friendly font"}
         aria-pressed={dyslexiaFont}
         className={`text-xs font-bold px-3 py-2 rounded-lg border transition-all

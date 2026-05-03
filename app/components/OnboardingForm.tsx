@@ -43,6 +43,15 @@ const DEFAULT_LABELS = {
   footer: "Built with Google Gemini AI for Indian Citizen Education"
 };
 
+/**
+ * OnboardingForm Component
+ * 
+ * The entry point for the Loktantra AI platform.
+ * Features:
+ * - Real-time multilingual interface (Hindi/Bengali/English)
+ * - Dynamic voter scenario selection
+ * - Global state initialization for personalized civic education
+ */
 export default function OnboardingForm(): JSX.Element {
   const { language } = useAppStore();
   const [profile, setProfile] = useState<UserProfile | null>(null);

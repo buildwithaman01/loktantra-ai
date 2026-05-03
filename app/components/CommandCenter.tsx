@@ -12,6 +12,15 @@ interface UserProfile {
   voterStatus: string;
 }
 
+/**
+ * CommandCenter Component
+ * 
+ * The primary dashboard for registered voters.
+ * Features:
+ * - Adaptive layout (Desktop Grid / Mobile Tabbed)
+ * - Integrated AI Chat Assistant with streaming support
+ * - Hyperlocal Polling Radar and ID Verification tools
+ */
 export default function CommandCenter({ profile }: { profile: UserProfile }): JSX.Element {
   const [activeTab, setActiveTab] = useState<"chat" | "map" | "tools">("chat");
   const [scanResult, setScanResult] = useState<string | null>(null);

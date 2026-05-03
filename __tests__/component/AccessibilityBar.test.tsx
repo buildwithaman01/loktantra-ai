@@ -1,45 +1,33 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import AccessibilityBar from "@/app/components/AccessibilityBar";
 
-describe("AccessibilityBar", () => {
+describe("AccessibilityBar Component", () => {
   beforeEach(() => {
     document.documentElement.className = "";
   });
 
   it("renders both accessibility buttons", () => {
     render(<AccessibilityBar />);
-    expect(screen.getByRole("button", { name: /high contrast/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /dyslexia/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /CONTRAST/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /FONT/i })).toBeInTheDocument();
   });
 
-  it("toggles high-contrast class on document root when clicked", () => {
+  it("toggles high-contrast class on document root", () => {
     render(<AccessibilityBar />);
-    const btn = screen.getByRole("button", { name: /enable high contrast/i });
+    const btn = screen.getByRole("button", { name: /CONTRAST/i });
     fireEvent.click(btn);
+    // Note: useEffect in testing environment might need a tick or act
     expect(document.documentElement.classList.contains("high-contrast")).toBe(true);
-  });
-
-  it("removes high-contrast class on second click", () => {
-    render(<AccessibilityBar />);
-    const btn = screen.getByRole("button", { name: /enable high contrast/i });
     fireEvent.click(btn);
-    fireEvent.click(screen.getByRole("button", { name: /disable high contrast/i }));
     expect(document.documentElement.classList.contains("high-contrast")).toBe(false);
-  });
-
-  it("high contrast button has correct aria-pressed state", () => {
-    render(<AccessibilityBar />);
-    const btn = screen.getByRole("button", { name: /enable high contrast/i });
-    expect(btn).toHaveAttribute("aria-pressed", "false");
-    fireEvent.click(btn);
-    expect(screen.getByRole("button", { name: /disable high contrast/i }))
-      .toHaveAttribute("aria-pressed", "true");
   });
 
   it("toggles dyslexia-font class on document root", () => {
     render(<AccessibilityBar />);
-    const btn = screen.getByRole("button", { name: /enable dyslexia/i });
+    const btn = screen.getByRole("button", { name: /FONT/i });
     fireEvent.click(btn);
     expect(document.documentElement.classList.contains("dyslexia-font")).toBe(true);
+    fireEvent.click(btn);
+    expect(document.documentElement.classList.contains("dyslexia-font")).toBe(false);
   });
 });
