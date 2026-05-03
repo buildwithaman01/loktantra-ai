@@ -19,6 +19,20 @@
 
 ---
 
+## 🖼️ Visual Tour
+
+<p align="center">
+  <img src="screenshots/desktop_view.png" width="800" alt="Desktop Dashboard View" />
+</p>
+
+<p align="center">
+  <img src="screenshots/mobile_chat.png" width="300" alt="Mobile Chat Assistant" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="screenshots/mobile_map.png" width="300" alt="Mobile Polling Radar" />
+</p>
+
+---
+
 ## The Problem
 First-time voters in Tier 2/3 cities and rural areas face three critical barriers:
 1. Complex, jargon-heavy Election Commission documentation
