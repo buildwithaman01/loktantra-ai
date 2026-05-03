@@ -1,21 +1,42 @@
 "use client";
+import { useState, useEffect } from "react";
 
-// Placeholder — Agent 2 fills this component
 export default function AccessibilityBar(): JSX.Element {
+  const [highContrast, setHighContrast] = useState(false);
+  const [dyslexiaFont, setDyslexiaFont] = useState(false);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("high-contrast", highContrast);
+  }, [highContrast]);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dyslexia-font", dyslexiaFont);
+  }, [dyslexiaFont]);
+
   return (
-    <div aria-label="Accessibility options" className="flex gap-2 mt-2">
+    <aside aria-label="Accessibility options" className="flex gap-2 p-1 bg-white/5 rounded-xl backdrop-blur-sm border border-white/5">
       <button
-        aria-label="Toggle high contrast mode"
-        className="text-xs px-3 py-1 rounded border border-gray-300 hover:bg-gray-50"
+        onClick={() => setHighContrast((prev) => !prev)}
+        aria-label={highContrast ? "Disable high contrast mode" : "Enable high contrast mode"}
+        aria-pressed={highContrast}
+        className={`text-xs font-bold px-3 py-2 rounded-lg border transition-all
+          ${highContrast 
+            ? "bg-yellow-400 border-yellow-400 text-black shadow-md scale-105" 
+            : "border-white/30 text-white/80 hover:border-white/60 hover:text-white"}`}
       >
-        High Contrast
+        CONTRAST
       </button>
       <button
-        aria-label="Toggle dyslexia-friendly font"
-        className="text-xs px-3 py-1 rounded border border-gray-300 hover:bg-gray-50"
+        onClick={() => setDyslexiaFont((prev) => !prev)}
+        aria-label={dyslexiaFont ? "Disable dyslexia-friendly font" : "Enable dyslexia-friendly font"}
+        aria-pressed={dyslexiaFont}
+        className={`text-xs font-bold px-3 py-2 rounded-lg border transition-all
+          ${dyslexiaFont 
+            ? "bg-green-400 border-green-400 text-black shadow-md scale-105" 
+            : "border-white/30 text-white/80 hover:border-white/60 hover:text-white"}`}
       >
-        Dyslexia Font
+        FONT
       </button>
-    </div>
+    </aside>
   );
 }

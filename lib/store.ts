@@ -1,4 +1,3 @@
-// GAP 1 Fix — Zustand store for language and accessibility state
 import { create } from "zustand";
 
 type Language = "en" | "hi" | "bn";
@@ -14,9 +13,9 @@ interface AppStore {
 
 export const useAppStore = create<AppStore>((set) => ({
   language: "en",
-  setLanguage: (lang) => set({ language: lang }),
+  setLanguage: (lang): void => set({ language: lang }),
   highContrast: false,
-  toggleHighContrast: () => set((s) => ({ highContrast: !s.highContrast })),
+  toggleHighContrast: (): void => set((s) => ({ highContrast: !s.highContrast })),
   dyslexiaFont: false,
-  toggleDyslexiaFont: () => set((s) => ({ dyslexiaFont: !s.dyslexiaFont })),
+  toggleDyslexiaFont: (): void => set((s) => ({ dyslexiaFont: !s.dyslexiaFont })),
 }));

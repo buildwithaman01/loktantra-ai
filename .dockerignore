@@ -1,0 +1,17 @@
+node_modules
+.next
+.git
+.env
+.env.local
+*.log
+playwright-report
+test-results
+coverage
+__tests__
+e2e
+README.md
+.eslintrc.json
+.prettierrc
+jest.config.ts
+jest.setup.ts
+playwright.config.ts
