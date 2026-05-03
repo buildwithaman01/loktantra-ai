@@ -6,14 +6,14 @@ export default function IDScanner({ onResult }: { onResult: (res: string) => voi
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const file = e.target.files?.[0];
     if (!file) return;
     
     const reader = new FileReader();
-    reader.onload = (event) => {
+    reader.onload = (event: ProgressEvent<FileReader>): void => {
       const img = new Image();
-      img.onload = () => {
+      img.onload = (): void => {
         const canvas = document.createElement("canvas");
         const MAX_WIDTH = 1200;
         let width = img.width;
@@ -37,7 +37,7 @@ export default function IDScanner({ onResult }: { onResult: (res: string) => voi
     reader.readAsDataURL(file);
   };
 
-  const processImage = async (base64: string) => {
+  const processImage = async (base64: string): Promise<void> => {
     setIsAnalyzing(true);
     setError(null);
     try {

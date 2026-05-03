@@ -11,7 +11,7 @@ export default function Header(): JSX.Element {
   const [title, setTitle] = useState("Loktantra AI");
 
   useEffect(() => {
-    const updateTitle = async () => {
+    const updateTitle = async (): Promise<void> => {
       if (language === "en") {
         setTitle("Loktantra AI");
         return;

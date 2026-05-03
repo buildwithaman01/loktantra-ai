@@ -5,7 +5,7 @@ export default function EligibilityWizard(): JSX.Element {
   const [step, setStep] = useState(1);
   const [answers, setAnswers] = useState({ age: 0, disabled: false });
 
-  const reset = () => {
+  const reset = (): void => {
     setStep(1);
     setAnswers({ age: 0, disabled: false });
   };
@@ -23,7 +23,7 @@ export default function EligibilityWizard(): JSX.Element {
         <div className="space-y-6 animate-fade-in-up">
           <p className="text-sm text-gray-600">Step 1: What is your current age?</p>
           <div className="grid grid-cols-2 gap-3">
-            {[18, 45, 85, 90].map(age => (
+            {[18, 45, 85, 90].map((age: number) => (
               <button 
                 key={age}
                 onClick={() => { setAnswers({ ...answers, age }); setStep(2); }}

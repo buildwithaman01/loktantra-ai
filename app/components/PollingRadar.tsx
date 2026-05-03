@@ -27,9 +27,8 @@ export default function PollingRadar(props: { state: string }): JSX.Element {
           });
           setMapObj(m);
         }
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error("Failed to load Google Maps", err);
+      } catch {
+        setIsLoading(false);
       }
     };
     initMap();
@@ -79,9 +78,8 @@ export default function PollingRadar(props: { state: string }): JSX.Element {
           }
         }
       }
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
+    } catch {
+      setIsLoading(false);
     } finally {
       setIsLoading(false);
     }

@@ -9,7 +9,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   const body = await req.json().catch(() => null);
   
-  // Support both single string and array of strings
   const texts = Array.isArray(body.text) ? body.text : [body.text];
   const targetLanguage = body.targetLanguage || "en";
 
@@ -39,7 +38,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     const data = await res.json() as { data: { translations: Array<{ translatedText: string }> } };
     
-    // Return array if input was array, else single string
     if (Array.isArray(body.text)) {
       const translated = data.data.translations.map(t => t.translatedText);
       return NextResponse.json({ translated });
@@ -47,9 +45,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       const translated = data.data.translations[0]?.translatedText ?? body.text;
       return NextResponse.json({ translated });
     }
-  } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : "Translation service error";
-    console.error("Translation error:", message);
+  } catch {
     return NextResponse.json({ error: "Translation failed" }, { status: 500 });
   }
 }

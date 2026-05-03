@@ -38,8 +38,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }));
 
     return NextResponse.json({ booths });
-  } catch (error) {
-    console.error("Maps API error:", error);
-    return NextResponse.json({ error: "Could not fetch booth locations" }, { status: 500 });
+  } catch {
+    return NextResponse.json({ error: "Failed to fetch booths" }, { status: 500 });
   }
 }

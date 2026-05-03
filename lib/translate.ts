@@ -38,8 +38,7 @@ export async function translate<T extends string | string[]>(
     }
 
     return result;
-  } catch (err) {
-    console.error("Translation helper error:", err);
+  } catch {
     return text;
   }
 }

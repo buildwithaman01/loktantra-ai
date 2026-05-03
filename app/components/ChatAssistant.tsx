@@ -50,7 +50,7 @@ export default function ChatAssistant({ userProfile }: { userProfile: UserProfil
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
 
-  const startRecordingFallback = async () => {
+  const startRecordingFallback = async (): Promise<void> => {
     try {
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         setError("⚠️ Browser Security Block: navigator.mediaDevices is undefined. This usually happens on insecure connections.");
@@ -62,16 +62,18 @@ export default function ChatAssistant({ userProfile }: { userProfile: UserProfil
       mediaRecorderRef.current = recorder;
       chunksRef.current = [];
 
-      recorder.ondataavailable = (e) => chunksRef.current.push(e.data);
-      recorder.onstop = async () => {
+      recorder.ondataavailable = (e: BlobEvent): void => {
+        chunksRef.current.push(e.data);
+      };
+      recorder.onstop = async (): Promise<void> => {
         const audioBlob = new Blob(chunksRef.current, { type: "audio/webm" });
         const reader = new FileReader();
         reader.readAsDataURL(audioBlob);
-        reader.onloadend = () => {
+        reader.onloadend = (): void => {
           const base64Audio = reader.result as string;
           handleAudioSubmit(base64Audio);
         };
-        stream.getTracks().forEach(t => t.stop());
+        stream.getTracks().forEach((t: MediaStreamTrack) => t.stop());
       };
 
       recorder.start();
@@ -82,7 +84,6 @@ export default function ChatAssistant({ userProfile }: { userProfile: UserProfil
     } catch (err) {
       const errorName = (err as any)?.name || "Unknown";
       const errorMessage = (err as any)?.message || "Check hardware";
-      console.error("DEBUG MIC ERROR:", errorName, errorMessage);
       if (errorName === "NotAllowedError") {
         setError("⚠️ Permission Denied: Chrome is blocked. Click the 'Lock' icon and 'Reset Permission'.");
       } else if (errorName === "NotFoundError") {
@@ -95,8 +96,7 @@ export default function ChatAssistant({ userProfile }: { userProfile: UserProfil
     }
   };
 
-  const toggleListening = async () => {
-    console.log("[LOKTANTRA] Voice button triggered - trying Standard API");
+  const toggleListening = async (): Promise<void> => {
     try {
       const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
       if (!SpeechRecognition) {
@@ -115,27 +115,20 @@ export default function ChatAssistant({ userProfile }: { userProfile: UserProfil
       recognition.continuous = false;
       recognition.interimResults = false;
 
-      recognition.onstart = () => {
+      recognition.onstart = (): void => {
         setIsListening(true);
         setError(null);
       };
 
-      recognition.onend = () => {
+      recognition.onend = (): void => {
         setIsListening(false);
       };
 
-      recognition.onerror = (event: any) => {
-        console.error("Speech API Error:", event?.error);
-        if (event?.error === "not-allowed") {
-          console.log("Switching to MediaRecorder Fallback...");
-          startRecordingFallback();
-        } else {
-          setError(`⚠️ Speech Error: ${event?.error || "unknown"}`);
-        }
+      recognition.onerror = (): void => {
         setIsListening(false);
       };
 
-      recognition.onresult = (event: any) => {
+      recognition.onresult = (event: any): void => {
         const transcript = event?.results[0][0].transcript;
         if (transcript) {
           setInput(transcript);
@@ -149,7 +142,7 @@ export default function ChatAssistant({ userProfile }: { userProfile: UserProfil
     }
   };
 
-  const handleAudioSubmit = async (base64Audio: string) => {
+  const handleAudioSubmit = async (base64Audio: string): Promise<void> => {
     setIsLoading(true);
     try {
       // We'll use a new vision/audio-capable endpoint
@@ -211,7 +204,7 @@ export default function ChatAssistant({ userProfile }: { userProfile: UserProfil
 
         const [displayText, jsonPart] = fullText.split("###FORM_DATA###");
         
-        setMessages((prev) => prev.map(m => {
+        setMessages((prev) => prev.map((m: Message): Message => {
           if (m.id === aiMessageId) {
             let formData: ElectionFormData | undefined = undefined;
             if (jsonPart) {
@@ -225,8 +218,9 @@ export default function ChatAssistant({ userProfile }: { userProfile: UserProfil
           return m;
         }));
       }
-    } catch (err: any) {
-      setError(err.message || "An error occurred");
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "An error occurred";
+      setError(msg);
     } finally {
       setIsLoading(false);
     }

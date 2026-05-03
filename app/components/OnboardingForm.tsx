@@ -21,9 +21,13 @@ const INDIAN_STATES = [
 ];
 
 const VOTER_SITUATIONS = [
-  { value: "never_voted", label: "First-time voter — never registered" },
-  { value: "moved_city", label: "Moved to a new city / constituency" },
-  { value: "lost_id", label: "Lost my Voter ID card" },
+  { value: "new_registration", label: "I want to register as a new voter (Form 6)" },
+  { value: "address_change", label: "I moved to a new address (Form 8)" },
+  { value: "correction", label: "I need to correct my details (Form 8)" },
+  { value: "lost_card", label: "I lost my Voter ID card" },
+  { value: "home_voting", label: "I am a Senior Citizen/PwD (Home Voting - Form 12D)" },
+  { value: "overseas_voter", label: "I am an Overseas (NRI) Voter (Form 6A)" },
+  { value: "service_voter", label: "I am a Service Voter (Armed Forces)" },
   { value: "want_info", label: "Just want to understand the process" },
 ];
 
@@ -49,7 +53,7 @@ export default function OnboardingForm(): JSX.Element {
   const [translatedSituations, setTranslatedSituations] = useState(VOTER_SITUATIONS);
 
   useEffect(() => {
-    const performTranslation = async () => {
+    const performTranslation = async (): Promise<void> => {
       if (language === "en") {
         setLabels(DEFAULT_LABELS);
         setTranslatedSituations(VOTER_SITUATIONS);

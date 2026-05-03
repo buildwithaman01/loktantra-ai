@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from "@google/generative-ai";
+import { rateLimit } from "@/lib/rateLimiter";
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  const ip = req.headers.get("x-forwarded-for") ?? "unknown";
+  if (!rateLimit(`vision-${ip}`, 5, 60_000)) {
+    return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
+  }
+
   const { image, type } = await req.json();
 
   if (!image) {
@@ -48,7 +54,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const text = result.response.text();
     return NextResponse.json({ result: text });
   } catch (error: unknown) {
-    console.error("VISION_API_ERROR:", error);
     const message = (error as { message?: string })?.message?.toLowerCase() || "";
     
     if (message.includes("api key")) {

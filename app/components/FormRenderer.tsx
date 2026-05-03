@@ -6,7 +6,7 @@ interface FormData {
 }
 
 export default function FormRenderer({ data }: { data: FormData }): JSX.Element {
-  const handlePrint = () => {
+  const handlePrint = (): void => {
     window.print();
   };
 

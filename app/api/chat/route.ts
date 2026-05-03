@@ -30,7 +30,7 @@ export async function POST(req: NextRequest): Promise<Response> {
   const writer = stream.writable.getWriter();
 
   // Handle the logic in an async block
-  (async () => {
+  (async (): Promise<void> => {
     let success = false;
 
     for (const modelName of modelsToTry) {
@@ -53,7 +53,6 @@ export async function POST(req: NextRequest): Promise<Response> {
           }
         } catch (error: unknown) {
           const errorMessage = error instanceof Error ? error.message : "Chat API Error";
-          console.error(`Error with ${modelName}:`, errorMessage);
           const errorWithStatus = error as { status?: number };
           if (errorWithStatus.status === 429 || errorWithStatus.status === 404 || errorMessage.includes("not found")) {
             // Cascade to next key/model
@@ -72,9 +71,8 @@ export async function POST(req: NextRequest): Promise<Response> {
     }
     
     await writer.close();
-  })().catch(err => {
-    console.error("Critical streaming error:", err);
-    writer.abort(err);
+  })().catch(() => {
+    writer.abort();
   });
 
   return new Response(stream.readable, {
