@@ -95,5 +95,5 @@ npm run dev
 
 ---
 
-*Built with Google Antigravity + Gemini API*  
+*Built with Gemini API*  
 *#BuildwithAI #PromptWarsVirtual #ElectionTech*
