@@ -1,5 +1,9 @@
 # 🗳️ Loktantra AI — Personalized Civic Command Center
 
+[![Build Status](https://img.shields.io/badge/Build-Passing-success?style=for-the-badge&logo=google-cloud)](https://loktantra-ai-121988453399.asia-south1.run.app)
+[![Tech Stack](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)](https://nextjs.org)
+[![AI Engine](https://img.shields.io/badge/Gemini-2.5--Flash-orange?style=for-the-badge&logo=google-gemini)](https://deepmind.google/technologies/gemini/)
+
 <p align="center">
   <img src="public/icon-512.png" width="128" height="128" alt="Loktantra AI Logo" />
 </p>
@@ -10,6 +14,7 @@
 **Built for:** PromptWars Virtual | Challenge 2: Election Process Education  
 **Host:** Hack2Skill × Google for Developers  
 **Live Demo:** [https://loktantra-ai-121988453399.asia-south1.run.app/](https://loktantra-ai-121988453399.asia-south1.run.app/)  
+**GitHub Repo:** [https://github.com/buildwithaman01/loktantra-ai](https://github.com/buildwithaman01/loktantra-ai)  
 **App Type:** Installable Progressive Web App (PWA)
 
 ---
