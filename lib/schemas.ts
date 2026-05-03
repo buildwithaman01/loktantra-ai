@@ -1,32 +1,25 @@
+/**
+ * Election Form Schemas and Type Definitions
+ */
 import { z } from "zod";
 
-// Input validation schemas
-export const ChatInputSchema = z.object({
-  message: z
-    .string()
-    .min(1, "Message cannot be empty")
-    .max(500, "Message too long")
-    .trim(),
-  language: z.enum(["en", "hi", "bn"]).default("en"),
-  userProfile: z.object({
-    age: z.string(),
-    state: z.string(),
-    voterStatus: z.string(),
-  }).optional(),
+/**
+ * User Profile Schema
+ */
+export const UserProfileSchema = z.object({
+  age: z.string(),
+  state: z.string(),
+  voterStatus: z.string(),
 });
 
-export const TranslateInputSchema = z.object({
-  text: z.union([z.string(), z.array(z.string())]),
-  targetLanguage: z.string(),
-});
+export type UserProfile = z.infer<typeof UserProfileSchema>;
 
-export const BoothInputSchema = z.object({
-  pinCode: z
-    .string()
-    .regex(/^\d{6}$/, "PIN code must be exactly 6 digits"),
-});
-
-// Gemini output validation schema
+/**
+ * Election Form Selection Schema
+ * 
+ * Defines the structured JSON output required from Gemini for
+ * personalized voter guidance.
+ */
 export const ElectionFormSchema = z.object({
   scenario: z.enum([
     "new_registration",
@@ -48,10 +41,25 @@ export const ElectionFormSchema = z.object({
     "No form needed",
   ]),
   steps: z.array(z.string()).min(1).max(10),
+  documents: z.array(z.string()).min(1),
   deadline: z.string().optional(),
-  documents: z.array(z.string()).min(0).max(10),
-  plainTextReply: z.string().min(1, "A plain text response is required"),
+  plainTextReply: z.string().optional(),
 });
 
 export type ElectionFormData = z.infer<typeof ElectionFormSchema>;
-export type ChatInput = z.infer<typeof ChatInputSchema>;
+
+/**
+ * Chat Input Validation Schema
+ */
+export const ChatInputSchema = z.object({
+  message: z.string().min(1).max(5000),
+  language: z.enum(["en", "hi", "bn"]).default("en"),
+  userProfile: UserProfileSchema.optional(),
+});
+
+/**
+ * Booth Input Validation Schema
+ */
+export const BoothInputSchema = z.object({
+  pinCode: z.string().length(6).regex(/^\d+$/),
+});

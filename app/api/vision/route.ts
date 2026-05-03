@@ -2,19 +2,28 @@ import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from "@google/generative-ai";
 import { rateLimit } from "@/lib/rateLimiter";
 
+/**
+ * Vision API POST Handler
+ * 
+ * Processes identity documents using Gemini 1.5 Flash Vision.
+ * Implements security rate limiting and safety filtering.
+ * 
+ * @param {NextRequest} req - The incoming request containing base64 image data.
+ * @returns {Promise<NextResponse>} - Analysis result or error object.
+ */
 export async function POST(req: NextRequest): Promise<NextResponse> {
-  const ip = req.headers.get("x-forwarded-for") ?? "unknown";
+  const ip: string = req.headers.get("x-forwarded-for") ?? "unknown";
   if (!rateLimit(`vision-${ip}`, 5, 60_000)) {
     return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
   }
 
-  const { image, type } = await req.json();
+  const { image, type }: { image: string, type?: string } = await req.json();
 
   if (!image) {
     return NextResponse.json({ error: "No data provided" }, { status: 400 });
   }
 
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey: string | undefined = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     return NextResponse.json({ error: "AI service unavailable" }, { status: 503 });
   }
@@ -31,12 +40,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       ]
     });
 
-    // Ensure we have a valid base64 string
     if (!image.includes(",")) {
       return NextResponse.json({ error: "Invalid image format" }, { status: 400 });
     }
 
-    const base64Data = image.split(",")[1];
+    const base64Data: string = image.split(",")[1];
 
     if (type === "audio") {
       const result = await model.generateContent([
@@ -51,24 +59,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       { inlineData: { data: base64Data, mimeType: "image/jpeg" } },
     ]);
 
-    const text = result.response.text();
+    const text: string = result.response.text();
     return NextResponse.json({ result: text });
-  } catch (error: unknown) {
-    const message = (error as { message?: string })?.message?.toLowerCase() || "";
-    
-    if (message.includes("api key")) {
-      return NextResponse.json({ error: "Invalid API Key. Please check your .env file." }, { status: 401 });
-    }
-    if (message.includes("model not found") || message.includes("model_not_found")) {
-      return NextResponse.json({ error: "Model 'gemini-1.5-flash' is not enabled for this API key." }, { status: 404 });
-    }
-    if (message.includes("429") || message.includes("quota")) {
-      return NextResponse.json({ error: "Too many requests. Please wait a moment." }, { status: 429 });
-    }
-    if (message.includes("safety")) {
-      return NextResponse.json({ error: "Image flagged by safety filters. Please use a standard ID card photo." }, { status: 400 });
-    }
-    
+  } catch {
     return NextResponse.json({ error: "AI Processing Error. Please try a clearer, well-lit photo." }, { status: 500 });
   }
 }

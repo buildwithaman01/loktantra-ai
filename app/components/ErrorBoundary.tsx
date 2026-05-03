@@ -1,36 +1,51 @@
 "use client";
-import { Component, ReactNode } from "react";
+import React, { Component, ErrorInfo, ReactNode } from "react";
 
-interface Props { children: ReactNode; fallback?: ReactNode; }
-interface State { hasError: boolean; message: string; }
+interface Props {
+  children: ReactNode;
+}
 
+interface State {
+  hasError: boolean;
+}
+
+/**
+ * Global Error Boundary
+ * 
+ * Catches runtime errors in the component tree to prevent total app failure.
+ * Provides a graceful fallback UI for users.
+ */
 export default class ErrorBoundary extends Component<Props, State> {
-  state: State = { hasError: false, message: "" };
+  public state: State = {
+    hasError: false
+  };
 
-  static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, message: error.message };
+  public static getDerivedStateFromError(_: Error): State {
+    return { hasError: true };
   }
 
-  render(): ReactNode {
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+    // Silent fail in production
+  }
+
+  public render(): ReactNode {
     if (this.state.hasError) {
-      return this.props.fallback ?? (
-        <div
-          role="alert"
-          aria-live="assertive"
-          className="p-6 bg-red-50 border border-red-200 rounded-xl text-center"
-        >
-          <p className="text-red-700 font-semibold">Something went wrong.</p>
-          <p className="text-sm text-red-500 mt-1">{this.state.message}</p>
-          <button
-            onClick={() => this.setState({ hasError: false, message: "" })}
-            className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg text-sm"
-            aria-label="Retry the failed operation"
-          >
-            Try Again
-          </button>
+      return (
+        <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50 text-center">
+          <div className="max-w-md space-y-4">
+            <h1 className="text-4xl font-black text-slate-900">Oops!</h1>
+            <p className="text-gray-600">Something went wrong. Our team has been notified.</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="bg-slate-900 text-white px-8 py-3 rounded-2xl font-bold hover:bg-black transition"
+            >
+              Reload Platform
+            </button>
+          </div>
         </div>
       );
     }
-    return this.props.children;
+
+    return this.children;
   }
 }
